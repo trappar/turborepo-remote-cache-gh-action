@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/node16",
+  "compilerOptions": {
+    "rootDir": "src",
+    "strict": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "declaration": false
+  }
+}
