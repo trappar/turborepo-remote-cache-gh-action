@@ -2,16 +2,8 @@ import { setFailed, getState, info } from "@actions/core";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
 import { getLogDir } from "./utils/getLogDir";
+import { pidIsRunning } from "./utils/pidIsRunning";
 import indent from "indent-string";
-
-function pidIsRunning(pid: number) {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
 
 async function post() {
   const pid = parseInt(getState("pid"));

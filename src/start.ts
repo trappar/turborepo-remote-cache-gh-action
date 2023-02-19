@@ -8,14 +8,11 @@ import {
 } from "@actions/core";
 import { resolve } from "path";
 import { waitUntilUsed } from "tcp-port-used";
+import { randomBytes } from "crypto";
+import getPort from "get-port";
 
 async function main() {
-  const port = parseInt(
-    getInput("port", {
-      required: true,
-      trimWhitespace: true,
-    })
-  );
+  const port = await getPort();
 
   const storageProvider = getInput("storage-provider", {
     required: true,
@@ -26,11 +23,11 @@ async function main() {
     trimWhitespace: true,
   });
   const teamId = getInput("team-id", { trimWhitespace: true });
-  const turboToken = process.env.TURBO_TOKEN || "turbo-token";
+  const token = randomBytes(24).toString("hex");
 
   exportVariable("TURBO_API", `http://127.0.0.1:${port}`);
-  exportVariable("TURBO_TOKEN", turboToken);
-  exportVariable("TURBO_TEAM", `team_${teamId}`);
+  exportVariable("TURBO_TOKEN", token);
+  exportVariable("TURBO_TEAM", teamId);
 
   const subprocess = spawn("node", [resolve(__dirname, "../start_and_log")], {
     detached: true,
@@ -38,17 +35,17 @@ async function main() {
     env: {
       ...process.env,
       PORT: port.toString(),
-      TURBO_TOKEN: turboToken,
+      TURBO_TOKEN: token,
       STORAGE_PROVIDER: storageProvider,
       STORAGE_PATH: storagePath,
     },
   });
-  const pid = subprocess.pid?.toString();
 
+  const pid = subprocess.pid?.toString();
   subprocess.unref();
 
   try {
-    await waitUntilUsed(port, 500, 20000);
+    await waitUntilUsed(port, 250, 5000);
 
     info("Spawned Turbo Cache Server:");
     info(`  PID: ${pid}`);

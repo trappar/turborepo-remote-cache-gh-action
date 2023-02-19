@@ -1,6 +1,9 @@
 name: "TurboRepo Remote Cache Server"
 description: "Runs a TurboRepo remote cache server based on ducktors/turborepo-remote-cache."
 author: trappar
+branding:
+  icon: server
+  color: blue
 inputs:
   storage-provider:
     description: "Possible values are s3, google-cloud-storage, or azure-blob-storage. Local storage is technically supported but is useless."
@@ -12,10 +15,6 @@ inputs:
     description: "Sets the TURBO_TEAM env variable, which controls the directory where cache entries will be saved."
     required: false
     default: "ci"
-  port:
-    description: "Port to listen on."
-    required: false
-    default: "42042"
 runs:
   using: "node16"
   main: "dist/start/index.js"
