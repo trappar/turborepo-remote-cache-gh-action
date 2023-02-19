@@ -1,6 +1,9 @@
 name: "TurboRepo Remote Cache Server"
 description: "Runs a TurboRepo remote cache server based on ducktors/turborepo-remote-cache."
 author: trappar
+branding:
+  icon: server
+  color: blue
 inputs:
   storage-provider:
     description: "Possible values are s3, google-cloud-storage, or azure-blob-storage. Local storage is technically supported but is useless."
