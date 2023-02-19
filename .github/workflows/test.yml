@@ -25,6 +25,5 @@ jobs:
       - name: Run TurboRepo Remote Cache Server
         uses: ./
         with:
-          port: 42042
           storage-provider: local
           storage-path: test
