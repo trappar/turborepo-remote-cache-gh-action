@@ -2851,6 +2851,17 @@ const getLogDir = () => {
     return logDir;
 };
 
+;// CONCATENATED MODULE: ./src/utils/pidIsRunning.ts
+function pidIsRunning(pid) {
+    try {
+        process.kill(pid, 0);
+        return true;
+    }
+    catch (e) {
+        return false;
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/indent-string@5.0.0/node_modules/indent-string/index.js
 function indentString(string, count = 1, options = {}) {
 	const {
@@ -2897,15 +2908,7 @@ function indentString(string, count = 1, options = {}) {
 
 
 
-function pidIsRunning(pid) {
-    try {
-        process.kill(pid, 0);
-        return true;
-    }
-    catch (e) {
-        return false;
-    }
-}
+
 async function post() {
     const pid = parseInt((0,core.getState)("pid"));
     if (pidIsRunning(pid)) {

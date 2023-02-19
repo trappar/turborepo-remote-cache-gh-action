@@ -16,24 +16,29 @@ A GitHub action which runs a [ducktors/turborepo-remote-cache](https://github.co
 
 The Team ID to use. This controls the directory where cache entries will be saved. Default `"ci"`.
 
-### `port`
-
-The port to run the server on. This is configurable in case of a port collision, but shouldn't normally need to be changed. Default `"42042"`.
-
 ## Environment variables
 
 You may also need to set environment variables to provide credentials to the storage provider. See [supported storage providers](https://ducktors.github.io/turborepo-remote-cache/supported-storage-providers.html) for more information.
 
+### Note
+
+> If you are familiar with ducktors/turborepo-remote-cache, you may be wondering why there is a lack of other inputs for other environmental variables. The reasons are as follows:
+> * "`PORT`" - Set automatically by the action to a random free port on the runner.
+> * "`TURBO_TOKEN`" - Set automatically by the action to a random secure token on each workflow run.
+> * "`NODE_ENV`", "`LOG_LEVEL`", "`STORAGE_PATH_USE_TMP_FOLDER`", and "`BODY_LIMIT`" - These can be set manually using the `env` input to the action if needed, but it's not recommended to change them.
+
 ## Example usage
 
 ```yaml
-- uses: trappar/turborepo-remote-cache-gh-action@v1
-  env:
-    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+- name: TurboRepo Remote Cache Server
+  uses: trappar/turborepo-remote-cache-gh-action@v1
   with:
     storage-provider: s3
     storage-path: my-bucket-name
-```
+  env:
+    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-No further configuration is required. The action will automatically set environmental variables which TurboRepo uses to connect to the remote cache server.
+- name: Run Build
+  run: turbo build
+```
