@@ -1,4 +1,4 @@
-import { setFailed, getState, info } from "@actions/core";
+import { setFailed, getState, info, debug } from "@actions/core";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
 import { getLogDir } from "./utils/getLogDir";
@@ -23,12 +23,12 @@ async function post() {
     readFile(resolve(logDir, "err.log"), "utf8").catch(() => ""),
   ]);
 
-  info("Server logged the following output while running:");
-  info(indent(out, 2));
+  debug("Server logged the following output while running:");
+  debug(indent(out, 2));
 
   if (err) {
-    info("Server logged the following error while running:");
-    info(indent(err, 2));
+    debug("Server logged the following error while running:");
+    debug(indent(err, 2));
   }
 }
 

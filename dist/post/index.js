@@ -2956,11 +2956,11 @@ async function post() {
         (0,promises_namespaceObject.readFile)((0,external_path_.resolve)(logDir, "out.log"), "utf8").catch(() => ""),
         (0,promises_namespaceObject.readFile)((0,external_path_.resolve)(logDir, "err.log"), "utf8").catch(() => ""),
     ]);
-    (0,core.info)("Server logged the following output while running:");
-    (0,core.info)(indentString(out, 2));
+    (0,core.debug)("Server logged the following output while running:");
+    (0,core.debug)(indentString(out, 2));
     if (err) {
-        (0,core.info)("Server logged the following error while running:");
-        (0,core.info)(indentString(err, 2));
+        (0,core.debug)("Server logged the following error while running:");
+        (0,core.debug)(indentString(err, 2));
     }
 }
 post().catch(core.setFailed);
