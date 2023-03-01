@@ -6170,6 +6170,10 @@ async function main() {
     (0,core.debug)(`Getting available port...`);
     const port = await getPorts();
     (0,core.debug)(`Available port found: ${port}`);
+    (0,core.debug)(`Export environment variables...`);
+    (0,core.exportVariable)("TURBO_API", `http://127.0.0.1:${port}`);
+    (0,core.exportVariable)("TURBO_TOKEN", token);
+    (0,core.exportVariable)("TURBO_TEAM", teamId);
     (0,core.debug)(`Starting Turbo Cache Server...`);
     const subprocess = (0,external_child_process_namespaceObject.spawn)("node", [(0,external_path_.resolve)(__dirname, "../start_and_log")], {
         detached: true,

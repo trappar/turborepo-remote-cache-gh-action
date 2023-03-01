@@ -1,11 +1,17 @@
 import { spawn } from "child_process";
-import { saveState, info, setFailed, debug } from "@actions/core";
+import {
+  saveState,
+  info,
+  setFailed,
+  debug,
+  exportVariable,
+} from "@actions/core";
 import { resolve } from "path";
 import { waitUntilUsed } from "tcp-port-used";
 import getPort from "get-port";
 import { existsSync, mkdirSync } from "fs";
 import { logDir } from "./constants";
-import { storagePath, storageProvider, token } from "./inputs";
+import { storagePath, storageProvider, teamId, token } from "./inputs";
 
 async function main() {
   if (!existsSync(logDir)) {
@@ -16,6 +22,11 @@ async function main() {
   debug(`Getting available port...`);
   const port = await getPort();
   debug(`Available port found: ${port}`);
+
+  debug(`Export environment variables...`);
+  exportVariable("TURBO_API", `http://127.0.0.1:${port}`);
+  exportVariable("TURBO_TOKEN", token);
+  exportVariable("TURBO_TEAM", teamId);
 
   debug(`Starting Turbo Cache Server...`);
   const subprocess = spawn("node", [resolve(__dirname, "../start_and_log")], {
