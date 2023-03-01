@@ -1,34 +1,21 @@
 import { spawn } from "child_process";
-import {
-  exportVariable,
-  getInput,
-  saveState,
-  info,
-  setFailed,
-  debug,
-} from "@actions/core";
+import { saveState, info, setFailed, debug } from "@actions/core";
 import { resolve } from "path";
 import { waitUntilUsed } from "tcp-port-used";
-import { randomBytes } from "crypto";
 import getPort from "get-port";
+import { existsSync, mkdirSync } from "fs";
+import { logDir } from "./constants";
+import { storagePath, storageProvider, token } from "./inputs";
 
 async function main() {
+  if (!existsSync(logDir)) {
+    debug(`Creating log directory: "${logDir}"...`);
+    mkdirSync(logDir, { recursive: true });
+  }
+
+  debug(`Getting available port...`);
   const port = await getPort();
-
-  const storageProvider = getInput("storage-provider", {
-    required: true,
-    trimWhitespace: true,
-  });
-  const storagePath = getInput("storage-path", {
-    required: true,
-    trimWhitespace: true,
-  });
-  const teamId = getInput("team-id", { trimWhitespace: true });
-  const token = randomBytes(24).toString("hex");
-
-  exportVariable("TURBO_API", `http://127.0.0.1:${port}`);
-  exportVariable("TURBO_TOKEN", token);
-  exportVariable("TURBO_TEAM", teamId);
+  debug(`Available port found: ${port}`);
 
   debug(`Starting Turbo Cache Server...`);
   const subprocess = spawn("node", [resolve(__dirname, "../start_and_log")], {

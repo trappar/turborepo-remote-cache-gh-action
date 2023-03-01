@@ -1,9 +1,8 @@
 import { spawn } from "child_process";
 import { createWriteStream } from "fs";
 import { resolve } from "path";
-import { getLogDir } from "./utils/getLogDir";
+import { logDir } from "./constants";
 
-const logDir = getLogDir();
 const subprocess = spawn("node", [resolve(__dirname, "../server")]);
 
 subprocess.stdout.pipe(createWriteStream(resolve(logDir, "out.log")));

@@ -2867,26 +2867,7 @@ var core = __nccwpck_require__(733);
 const promises_namespaceObject = require("fs/promises");
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(17);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(147);
-// EXTERNAL MODULE: external "os"
-var external_os_ = __nccwpck_require__(37);
-var external_os_default = /*#__PURE__*/__nccwpck_require__.n(external_os_);
-;// CONCATENATED MODULE: ./src/utils/getLogDir.ts
-
-
-
-
-const getLogDir = () => {
-    const logDir = (0,external_path_.resolve)(external_os_default().tmpdir(), "turborepo-remote-cache-gh-action", "logs");
-    if (!(0,external_fs_.existsSync)(logDir)) {
-        (0,core.debug)(`Creating log directory: "${logDir}"...`);
-        (0,external_fs_.mkdirSync)(logDir);
-    }
-    return logDir;
-};
-
-;// CONCATENATED MODULE: ./src/utils/pidIsRunning.ts
+;// CONCATENATED MODULE: ./src/pidIsRunning.ts
 function pidIsRunning(pid) {
     try {
         process.kill(pid, 0);
@@ -2937,6 +2918,14 @@ function indentString(string, count = 1, options = {}) {
 	return string.replace(regex, indent.repeat(count));
 }
 
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(37);
+var external_os_default = /*#__PURE__*/__nccwpck_require__.n(external_os_);
+;// CONCATENATED MODULE: ./src/constants.ts
+
+
+const logDir = (0,external_path_.resolve)(external_os_default().tmpdir(), "turborepo-remote-cache-gh-action");
+
 ;// CONCATENATED MODULE: ./src/post.ts
 
 
@@ -2958,7 +2947,6 @@ async function post() {
             (0,core.setFailed)(`Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`);
         }
     }
-    const logDir = getLogDir();
     const [out, err] = await Promise.all([
         (0,promises_namespaceObject.readFile)((0,external_path_.resolve)(logDir, "out.log"), "utf8").catch(() => ""),
         (0,promises_namespaceObject.readFile)((0,external_path_.resolve)(logDir, "err.log"), "utf8").catch(() => ""),

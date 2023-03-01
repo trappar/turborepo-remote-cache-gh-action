@@ -1,9 +1,9 @@
 import { setFailed, getState, info, debug } from "@actions/core";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
-import { getLogDir } from "./utils/getLogDir";
-import { pidIsRunning } from "./utils/pidIsRunning";
+import { pidIsRunning } from "./pidIsRunning";
 import indent from "indent-string";
+import { logDir } from "./constants";
 
 async function post() {
   const pid = parseInt(getState("pid"));
@@ -23,7 +23,6 @@ async function post() {
     }
   }
 
-  const logDir = getLogDir();
   const [out, err] = await Promise.all([
     readFile(resolve(logDir, "out.log"), "utf8").catch(() => ""),
     readFile(resolve(logDir, "err.log"), "utf8").catch(() => ""),
