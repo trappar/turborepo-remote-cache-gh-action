@@ -12,9 +12,15 @@ async function post() {
     info(`Stopping Turbo Cache Server with PID ${pid}`);
     process.kill(pid);
   } else {
-    setFailed(
-      `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`
-    );
+    if (isNaN(pid)) {
+      setFailed(
+        `Turbo Cache Server was not running. This probably indicates that the server was unable to start.`
+      );
+    } else {
+      setFailed(
+        `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`
+      );
+    }
   }
 
   const logDir = getLogDir();
