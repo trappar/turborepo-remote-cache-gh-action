@@ -31,7 +31,7 @@ You may also need to set environment variables to provide credentials to the sto
 
 ```yaml
 - name: TurboRepo Remote Cache Server
-  uses: trappar/turborepo-remote-cache-gh-action@v1
+  uses: trappar/turborepo-remote-cache-gh-action@main
   with:
     storage-provider: s3
     storage-path: my-bucket-name
