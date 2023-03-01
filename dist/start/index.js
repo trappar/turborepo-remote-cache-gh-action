@@ -6122,6 +6122,7 @@ async function main() {
     (0,core.exportVariable)("TURBO_API", `http://127.0.0.1:${port}`);
     (0,core.exportVariable)("TURBO_TOKEN", token);
     (0,core.exportVariable)("TURBO_TEAM", teamId);
+    (0,core.debug)(`Starting Turbo Cache Server...`);
     const subprocess = (0,external_child_process_namespaceObject.spawn)("node", [(0,external_path_.resolve)(__dirname, "../start_and_log")], {
         detached: true,
         stdio: "ignore",
@@ -6136,6 +6137,7 @@ async function main() {
     const pid = subprocess.pid?.toString();
     subprocess.unref();
     try {
+        (0,core.debug)(`Waiting for port ${port} to be used...`);
         await (0,tcp_port_used/* waitUntilUsed */.BZ)(port, 250, 5000);
         (0,core.info)("Spawned Turbo Cache Server:");
         (0,core.info)(`  PID: ${pid}`);

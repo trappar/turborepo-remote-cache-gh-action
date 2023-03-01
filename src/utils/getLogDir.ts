@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { existsSync, mkdirSync } from "fs";
 import os from "os";
+import { debug } from "@actions/core";
 
 export const getLogDir = () => {
   const logDir = resolve(
@@ -10,6 +11,7 @@ export const getLogDir = () => {
   );
 
   if (!existsSync(logDir)) {
+    debug(`Creating log directory: "${logDir}"...`);
     mkdirSync(logDir);
   }
 

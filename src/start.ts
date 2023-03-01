@@ -5,6 +5,7 @@ import {
   saveState,
   info,
   setFailed,
+  debug,
 } from "@actions/core";
 import { resolve } from "path";
 import { waitUntilUsed } from "tcp-port-used";
@@ -29,6 +30,7 @@ async function main() {
   exportVariable("TURBO_TOKEN", token);
   exportVariable("TURBO_TEAM", teamId);
 
+  debug(`Starting Turbo Cache Server...`);
   const subprocess = spawn("node", [resolve(__dirname, "../start_and_log")], {
     detached: true,
     stdio: "ignore",
@@ -45,6 +47,7 @@ async function main() {
   subprocess.unref();
 
   try {
+    debug(`Waiting for port ${port} to be used...`);
     await waitUntilUsed(port, 250, 5000);
 
     info("Spawned Turbo Cache Server:");

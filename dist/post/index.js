@@ -2876,9 +2876,11 @@ var external_os_default = /*#__PURE__*/__nccwpck_require__.n(external_os_);
 
 
 
+
 const getLogDir = () => {
     const logDir = (0,external_path_.resolve)(external_os_default().tmpdir(), "turborepo-remote-cache-gh-action", "logs");
     if (!(0,external_fs_.existsSync)(logDir)) {
+        (0,core.debug)(`Creating log directory: "${logDir}"...`);
         (0,external_fs_.mkdirSync)(logDir);
     }
     return logDir;
