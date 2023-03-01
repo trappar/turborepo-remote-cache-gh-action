@@ -5,7 +5,7 @@
   "license": "MIT",
   "author": "Trappar <jeff.way@me.com>",
   "scripts": {
-    "lint": "eslint **/*.ts",
+    "lint": "eslint src/**/*",
     "clean": "rimraf dist",
     "build": "npm-run-all clean --parallel build:*",
     "build:server": "ncc build src/server.ts -o dist/server",
