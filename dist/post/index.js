@@ -2809,6 +2809,35 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -2840,11 +2869,15 @@ const promises_namespaceObject = require("fs/promises");
 var external_path_ = __nccwpck_require__(17);
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(147);
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(37);
+var external_os_default = /*#__PURE__*/__nccwpck_require__.n(external_os_);
 ;// CONCATENATED MODULE: ./src/utils/getLogDir.ts
 
 
+
 const getLogDir = () => {
-    const logDir = (0,external_path_.resolve)(process.cwd(), "log");
+    const logDir = (0,external_path_.resolve)(external_os_default().tmpdir(), "turborepo-remote-cache-gh-action", "logs");
     if (!(0,external_fs_.existsSync)(logDir)) {
         (0,external_fs_.mkdirSync)(logDir);
     }
