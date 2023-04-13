@@ -5943,6 +5943,34 @@ var core = __nccwpck_require__(7733);
 var external_path_ = __nccwpck_require__(1017);
 // EXTERNAL MODULE: ./node_modules/.pnpm/tcp-port-used@1.0.2/node_modules/tcp-port-used/index.js
 var tcp_port_used = __nccwpck_require__(6542);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(2037);
+var external_os_default = /*#__PURE__*/__nccwpck_require__.n(external_os_);
+;// CONCATENATED MODULE: ./src/constants.ts
+
+
+const logDir = (0,external_path_.resolve)(external_os_default().tmpdir(), "turborepo-remote-cache-gh-action");
+
+// EXTERNAL MODULE: external "crypto"
+var external_crypto_ = __nccwpck_require__(6113);
+;// CONCATENATED MODULE: ./src/inputs.ts
+
+
+const storageProvider = (0,core.getInput)("storage-provider", {
+    required: true,
+    trimWhitespace: true,
+});
+const storagePath = (0,core.getInput)("storage-path", {
+    required: true,
+    trimWhitespace: true,
+});
+const teamId = (0,core.getInput)("team-id", { trimWhitespace: true });
+const token = (0,external_crypto_.randomBytes)(24).toString("hex");
+const host = (0,core.getInput)("host", { trimWhitespace: true });
+const port = parseInt((0,core.getInput)("port", { trimWhitespace: true }));
+
 ;// CONCATENATED MODULE: external "node:net"
 const external_node_net_namespaceObject = require("node:net");
 ;// CONCATENATED MODULE: external "node:os"
@@ -6127,31 +6155,20 @@ function portNumbers(from, to) {
 	return generator(from, to);
 }
 
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(7147);
-// EXTERNAL MODULE: external "os"
-var external_os_ = __nccwpck_require__(2037);
-var external_os_default = /*#__PURE__*/__nccwpck_require__.n(external_os_);
-;// CONCATENATED MODULE: ./src/constants.ts
+;// CONCATENATED MODULE: ./src/getPort.ts
 
 
-const logDir = (0,external_path_.resolve)(external_os_default().tmpdir(), "turborepo-remote-cache-gh-action");
 
-// EXTERNAL MODULE: external "crypto"
-var external_crypto_ = __nccwpck_require__(6113);
-;// CONCATENATED MODULE: ./src/inputs.ts
-
-
-const storageProvider = (0,core.getInput)("storage-provider", {
-    required: true,
-    trimWhitespace: true,
-});
-const storagePath = (0,core.getInput)("storage-path", {
-    required: true,
-    trimWhitespace: true,
-});
-const teamId = (0,core.getInput)("team-id", { trimWhitespace: true });
-const token = (0,external_crypto_.randomBytes)(24).toString("hex");
+async function getPort() {
+    if (port) {
+        (0,core.debug)(`Using specified port: ${port}`);
+        return port;
+    }
+    (0,core.debug)(`Getting available port...`);
+    const freePort = await getPorts();
+    (0,core.debug)(`Available port found: ${freePort}`);
+    return freePort;
+}
 
 ;// CONCATENATED MODULE: ./src/start.ts
 
@@ -6167,11 +6184,9 @@ async function main() {
         (0,core.debug)(`Creating log directory: "${logDir}"...`);
         (0,external_fs_.mkdirSync)(logDir, { recursive: true });
     }
-    (0,core.debug)(`Getting available port...`);
-    const port = await getPorts();
-    (0,core.debug)(`Available port found: ${port}`);
+    const port = await getPort();
     (0,core.debug)(`Export environment variables...`);
-    (0,core.exportVariable)("TURBO_API", `http://127.0.0.1:${port}`);
+    (0,core.exportVariable)("TURBO_API", `${host}:${port}`);
     (0,core.exportVariable)("TURBO_TOKEN", token);
     (0,core.exportVariable)("TURBO_TEAM", teamId);
     (0,core.debug)(`Starting Turbo Cache Server...`);

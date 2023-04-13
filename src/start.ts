@@ -8,10 +8,10 @@ import {
 } from "@actions/core";
 import { resolve } from "path";
 import { waitUntilUsed } from "tcp-port-used";
-import getPort from "get-port";
 import { existsSync, mkdirSync } from "fs";
 import { logDir } from "./constants";
-import { storagePath, storageProvider, teamId, token } from "./inputs";
+import { host, storagePath, storageProvider, teamId, token } from "./inputs";
+import { getPort } from "./getPort";
 
 async function main() {
   if (!existsSync(logDir)) {
@@ -19,12 +19,10 @@ async function main() {
     mkdirSync(logDir, { recursive: true });
   }
 
-  debug(`Getting available port...`);
   const port = await getPort();
-  debug(`Available port found: ${port}`);
 
   debug(`Export environment variables...`);
-  exportVariable("TURBO_API", `http://127.0.0.1:${port}`);
+  exportVariable("TURBO_API", `${host}:${port}`);
   exportVariable("TURBO_TOKEN", token);
   exportVariable("TURBO_TEAM", teamId);
 
