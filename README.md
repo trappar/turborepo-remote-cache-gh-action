@@ -24,6 +24,14 @@ Used to set the `TURBO_API` env variable. Default `"http://127.0.0.1"`.
 
 Sets the port the server will listen on, and is added to the end of the TURBO_API env variable. When not set, a random free port will be used.
 
+### `port-retry-time-ms`
+
+Sets interval between checks to see if server is running on port. Defaults to 250ms.
+
+### `port-timeout-ms`
+
+Sets timeout of port checking. If server is not up and running on the port after this period, the action will fail. Defaults to 5000ms.
+
 ## Environment variables
 
 You may also need to set environment variables to provide credentials to the storage provider. See [supported storage providers](https://ducktors.github.io/turborepo-remote-cache/supported-storage-providers.html) for more information.
@@ -42,6 +50,8 @@ You may also need to set environment variables to provide credentials to the sto
   with:
     storage-provider: s3
     storage-path: my-bucket-name
+    port-retry-time-ms: 250
+    port-timeout-ms: 5000
   env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

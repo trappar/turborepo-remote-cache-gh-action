@@ -10,7 +10,15 @@ import { resolve } from "path";
 import { waitUntilUsed } from "tcp-port-used";
 import { existsSync, mkdirSync } from "fs";
 import { logDir } from "./constants";
-import { host, storagePath, storageProvider, teamId, token } from "./inputs";
+import {
+  host,
+  storagePath,
+  storageProvider,
+  teamId,
+  token,
+  retryTimeMs,
+  timeoutMs,
+} from "./inputs";
 import { getPort } from "./getPort";
 
 async function main() {
@@ -44,7 +52,7 @@ async function main() {
 
   try {
     debug(`Waiting for port ${port} to be used...`);
-    await waitUntilUsed(port, 250, 5000);
+    await waitUntilUsed(port, retryTimeMs, timeoutMs);
 
     info("Spawned Turbo Cache Server:");
     info(`  PID: ${pid}`);

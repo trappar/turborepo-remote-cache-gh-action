@@ -1,6 +1,6 @@
 import { debug } from "@actions/core";
 import { port } from "./inputs";
-import getFreePort from "get-port";
+import { getPortPromise } from "portfinder";
 
 export async function getPort(): Promise<number> {
   if (port) {
@@ -9,7 +9,7 @@ export async function getPort(): Promise<number> {
   }
 
   debug(`Getting available port...`);
-  const freePort = await getFreePort();
+  const freePort = await getPortPromise();
   debug(`Available port found: ${freePort}`);
 
   return freePort;
