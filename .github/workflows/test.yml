@@ -27,6 +27,8 @@ jobs:
         with:
           storage-provider: local
           storage-path: test
+          port-retry-time-ms: 500
+          port-timeout-ms: 10000
       
       - name: Ensure environmental variables have been set correctly
         run: |
