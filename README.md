@@ -10,7 +10,7 @@ A GitHub action which runs a [ducktors/turborepo-remote-cache](https://github.co
 
 ### `storage-path`
 
-**Required** The name of the bucket to use. Supports all options from [environmental variables](https://ducktors.github.io/turborepo-remote-cache/environment-variables.html) for more information.
+The name of the bucket/directory to use. Supports all options from [environmental variables](https://ducktors.github.io/turborepo-remote-cache/environment-variables.html) for more information.
 
 ### `team-id`
 
@@ -38,7 +38,7 @@ You may also need to set environment variables to provide credentials to the sto
 
 ```yaml
 - name: TurboRepo Remote Cache Server
-  uses: trappar/turborepo-remote-cache-gh-action@main
+  uses: trappar/turborepo-remote-cache-gh-action@v2
   with:
     storage-provider: s3
     storage-path: my-bucket-name
