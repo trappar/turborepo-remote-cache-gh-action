@@ -23,6 +23,6 @@ inputs:
     description: "Sets the port the server will listen on, and is added to the end of the TURBO_API env variable."
     required: false
 runs:
-  using: "node16"
+  using: "node20"
   main: "dist/start/index.js"
   post: "dist/post/index.js"

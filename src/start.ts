@@ -9,9 +9,9 @@ import {
 import { resolve } from "path";
 import { waitUntilUsed } from "tcp-port-used";
 import { existsSync, mkdirSync } from "fs";
-import { logDir } from "./constants";
-import { host, storagePath, storageProvider, teamId, token } from "./inputs";
-import { getPort } from "./getPort";
+import { logDir } from "./constants.js";
+import { host, storagePath, storageProvider, teamId, token } from "./inputs.js";
+import { getPort } from "./getPort.js";
 
 async function main() {
   if (!existsSync(logDir)) {

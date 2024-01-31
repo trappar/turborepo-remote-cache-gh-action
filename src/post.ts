@@ -1,9 +1,9 @@
 import { setFailed, getState, info, debug } from "@actions/core";
 import { readFile } from "fs/promises";
 import { resolve } from "path";
-import { pidIsRunning } from "./pidIsRunning";
+import { pidIsRunning } from "./pidIsRunning.js";
 import indent from "indent-string";
-import { logDir } from "./constants";
+import { logDir } from "./constants.js";
 
 async function post() {
   const pid = parseInt(getState("pid"));
@@ -14,11 +14,11 @@ async function post() {
   } else {
     if (isNaN(pid)) {
       setFailed(
-        `Turbo Cache Server was not running. This probably indicates that the server was unable to start.`
+        `Turbo Cache Server was not running. This probably indicates that the server was unable to start.`,
       );
     } else {
       setFailed(
-        `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`
+        `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`,
       );
     }
   }

@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
 import { createWriteStream } from "fs";
 import { resolve } from "path";
-import { logDir } from "./constants";
+import { logDir } from "./constants.js";
 
 const subprocess = spawn("node", [resolve(__dirname, "../server")]);
 

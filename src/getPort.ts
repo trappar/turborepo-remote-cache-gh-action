@@ -1,5 +1,5 @@
 import { debug } from "@actions/core";
-import { port } from "./inputs";
+import { port } from "./inputs.js";
 import getFreePort from "get-port";
 
 export async function getPort(): Promise<number> {
