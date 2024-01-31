@@ -27,17 +27,21 @@ async function main() {
   exportVariable("TURBO_TEAM", teamId);
 
   debug(`Starting Turbo Cache Server...`);
-  const subprocess = spawn("node", [resolve(__dirname, "../start_and_log")], {
-    detached: true,
-    stdio: "ignore",
-    env: {
-      ...process.env,
-      PORT: port.toString(),
-      TURBO_TOKEN: token,
-      STORAGE_PROVIDER: storageProvider,
-      STORAGE_PATH: storagePath,
+  const subprocess = spawn(
+    "node",
+    [resolve(process.cwd(), "../start_and_log")],
+    {
+      detached: true,
+      stdio: "ignore",
+      env: {
+        ...process.env,
+        PORT: port.toString(),
+        TURBO_TOKEN: token,
+        STORAGE_PROVIDER: storageProvider,
+        STORAGE_PATH: storagePath,
+      },
     },
-  });
+  );
 
   const pid = subprocess.pid?.toString();
   subprocess.unref();

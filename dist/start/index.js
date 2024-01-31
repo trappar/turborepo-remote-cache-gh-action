@@ -6134,7 +6134,7 @@ async function main() {
     (0,core.exportVariable)("TURBO_TOKEN", token);
     (0,core.exportVariable)("TURBO_TEAM", teamId);
     (0,core.debug)(`Starting Turbo Cache Server...`);
-    const subprocess = (0,external_child_process_namespaceObject.spawn)("node", [(0,external_path_.resolve)(__dirname, "../start_and_log")], {
+    const subprocess = (0,external_child_process_namespaceObject.spawn)("node", [(0,external_path_.resolve)(process.cwd(), "../start_and_log")], {
         detached: true,
         stdio: "ignore",
         env: {

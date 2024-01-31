@@ -58,7 +58,7 @@ const logDir = (0,external_path_namespaceObject.resolve)(external_os_default().t
 
 
 
-const subprocess = (0,external_child_process_namespaceObject.spawn)("node", [(0,external_path_namespaceObject.resolve)(__dirname, "../server")]);
+const subprocess = (0,external_child_process_namespaceObject.spawn)("node", [(0,external_path_namespaceObject.resolve)(process.cwd(), "../server")]);
 subprocess.stdout.pipe((0,external_fs_namespaceObject.createWriteStream)((0,external_path_namespaceObject.resolve)(logDir, "out.log")));
 subprocess.stderr.pipe((0,external_fs_namespaceObject.createWriteStream)((0,external_path_namespaceObject.resolve)(logDir, "err.log")));
 
