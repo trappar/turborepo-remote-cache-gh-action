@@ -2783,6 +2783,14 @@ var __webpack_exports__ = {};
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(93);
+;// CONCATENATED MODULE: ./src/indentMultiline.js
+function indentMultiline(message, spaces = 2) {
+  const output = [];
+  message.split('\n').forEach((line) => {
+    output.push(' '.repeat(spaces) + line);
+  });
+  return output.join('\n');
+}
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: external "node:fs/promises"
@@ -2816,6 +2824,7 @@ const readLog = async (name) => {
 
 
 
+
 function pidIsRunning(pid) {
   try {
     process.kill(pid, 0);
@@ -2825,30 +2834,18 @@ function pidIsRunning(pid) {
   }
 }
 
-function indentMultiline(message, spaces = 2) {
-  const output = [];
-  message.split('\n').forEach((line) => {
-    output.push(' '.repeat(spaces) + line);
-  });
-  return output.join('\n');
-}
-
 async function post() {
   const pid = parseInt((0,core.getState)('pid'));
+
+  if (isNaN(pid)) return;
 
   if (pidIsRunning(pid)) {
     (0,core.info)(`Stopping Turbo Cache Server with PID ${pid}`);
     process.kill(pid);
   } else {
-    if (isNaN(pid)) {
-      (0,core.setFailed)(
-        'Turbo Cache Server was not running. This probably indicates that the server was unable to start.',
-      );
-    } else {
-      (0,core.setFailed)(
-        `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`,
-      );
-    }
+    (0,core.setFailed)(
+      `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`,
+    );
   }
 
   const [out, err] = await Promise.all([readLog('out'), readLog('err')]);

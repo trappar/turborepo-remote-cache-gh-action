@@ -10,7 +10,9 @@ import { spawn } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { waitUntilUsedOnHost } from 'tcp-port-used';
 import { fileURLToPath } from 'url';
+import { indentMultiline } from './indentMultiline.js';
 import { host, port, storagePath, storageProvider, teamId, token } from './inputs.js';
+import { readLog } from './logs.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -67,7 +69,9 @@ async function main() {
 
     process.exit(0);
   } catch (e) {
-    throw new Error(`Turbo server failed to start on port: ${port}\n${e}`);
+    const errors = await readLog('err');
+    const errorMessage = errors ? `\nServer error log:\n${indentMultiline(errors)}` : '';
+    throw new Error(`Turbo server failed to start on port: ${port}${errorMessage}`);
   }
 }
 

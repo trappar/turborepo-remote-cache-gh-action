@@ -6044,6 +6044,14 @@ const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(impo
 var tcp_port_used = __nccwpck_require__(8351);
 ;// CONCATENATED MODULE: external "url"
 const external_url_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("url");
+;// CONCATENATED MODULE: ./src/indentMultiline.js
+function indentMultiline(message, spaces = 2) {
+  const output = [];
+  message.split('\n').forEach((line) => {
+    output.push(' '.repeat(spaces) + line);
+  });
+  return output.join('\n');
+}
 // EXTERNAL MODULE: external "crypto"
 var external_crypto_ = __nccwpck_require__(6113);
 ;// CONCATENATED MODULE: ./src/inputs.js
@@ -6063,7 +6071,36 @@ const token = (0,external_crypto_.randomBytes)(24).toString('hex');
 const host = (0,core.getInput)('host', { trimWhitespace: true });
 const port = parseInt((0,core.getInput)('port', { trimWhitespace: true }));
 
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
+;// CONCATENATED MODULE: external "node:fs/promises"
+const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(2037);
+;// CONCATENATED MODULE: ./src/logs.js
+
+
+
+
+
+const logDir = external_node_path_namespaceObject.resolve(external_os_.tmpdir(), 'turborepo-remote-cache-gh-action');
+
+if (!external_node_fs_namespaceObject.existsSync(logDir)) {
+  external_node_fs_namespaceObject.mkdirSync(logDir, { recursive: true });
+}
+
+const logFile = (name) => external_node_path_namespaceObject.resolve(logDir, name);
+
+const readLog = async (name) => {
+  try {
+    return await promises_namespaceObject.readFile(logFile(name), 'utf8');
+  } catch (e) {
+    return '';
+  }
+};
 ;// CONCATENATED MODULE: ./src/start.js
+
+
 
 
 
@@ -6127,7 +6164,9 @@ async function main() {
 
     process.exit(0);
   } catch (e) {
-    throw new Error(`Turbo server failed to start on port: ${port}\n${e}`);
+    const errors = await readLog('err');
+    const errorMessage = errors ? `\nServer error log:\n${indentMultiline(errors)}` : '';
+    throw new Error(`Turbo server failed to start on port: ${port}${errorMessage}`);
   }
 }
 

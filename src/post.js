@@ -1,4 +1,5 @@
 import { debug, getState, info, setFailed } from '@actions/core';
+import { indentMultiline } from './indentMultiline.js';
 import { readLog } from './logs.js';
 
 function pidIsRunning(pid) {
@@ -10,30 +11,18 @@ function pidIsRunning(pid) {
   }
 }
 
-function indentMultiline(message, spaces = 2) {
-  const output = [];
-  message.split('\n').forEach((line) => {
-    output.push(' '.repeat(spaces) + line);
-  });
-  return output.join('\n');
-}
-
 async function post() {
   const pid = parseInt(getState('pid'));
+
+  if (isNaN(pid)) return;
 
   if (pidIsRunning(pid)) {
     info(`Stopping Turbo Cache Server with PID ${pid}`);
     process.kill(pid);
   } else {
-    if (isNaN(pid)) {
-      setFailed(
-        'Turbo Cache Server was not running. This probably indicates that the server was unable to start.',
-      );
-    } else {
-      setFailed(
-        `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`,
-      );
-    }
+    setFailed(
+      `Turbo Cache Server with PID ${pid} was not running. This may indicate a configuration or server crash.`,
+    );
   }
 
   const [out, err] = await Promise.all([readLog('out'), readLog('err')]);
