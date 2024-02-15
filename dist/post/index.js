@@ -2820,11 +2820,7 @@ const readLog = async (name) => {
     return '';
   }
 };
-;// CONCATENATED MODULE: ./src/post.js
-
-
-
-
+;// CONCATENATED MODULE: ./src/pidIsRunning.js
 function pidIsRunning(pid) {
   try {
     process.kill(pid, 0);
@@ -2833,6 +2829,11 @@ function pidIsRunning(pid) {
     return false;
   }
 }
+;// CONCATENATED MODULE: ./src/post.js
+
+
+
+
 
 async function post() {
   const pid = parseInt((0,core.getState)('pid'));

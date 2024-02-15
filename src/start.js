@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url';
 import { indentMultiline } from './indentMultiline.js';
 import { host, port, storagePath, storageProvider, teamId, token } from './inputs.js';
 import { readLog } from './logs.js';
+import { pidIsRunning } from './pidIsRunning.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -56,7 +57,7 @@ async function main() {
 
   try {
     debug(`Waiting for port ${port} to be used...`);
-    await waitUntilUsedOnHost(port, host, 250, 5000);
+    await waitUntilUsedOnHost(port, host, 250, 10000);
     info('Spawned Turbo Cache Server:');
     info(`  PID: ${pid}`);
     info(`  Listening on port: ${port}`);
@@ -69,9 +70,13 @@ async function main() {
 
     process.exit(0);
   } catch (e) {
+    if (pidIsRunning(pid)) {
+      debug(`Timed out while waiting for Turbo Cache Server, yet process is running. Stopping PID: ${pid}...`);
+      process.kill(pid);
+    }
     const errors = await readLog('err');
     const errorMessage = errors ? `\nServer error log:\n${indentMultiline(errors)}` : '';
-    throw new Error(`Turbo server failed to start on port: ${port}${errorMessage}`);
+    throw new Error(`Turbo Cache Server failed to start on port: ${port}${errorMessage}`);
   }
 }
 

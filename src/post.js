@@ -1,15 +1,7 @@
 import { debug, getState, info, setFailed } from '@actions/core';
 import { indentMultiline } from './indentMultiline.js';
 import { readLog } from './logs.js';
-
-function pidIsRunning(pid) {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
+import { pidIsRunning } from './pidIsRunning.js';
 
 async function post() {
   const pid = parseInt(getState('pid'));

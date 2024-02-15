@@ -6098,7 +6098,17 @@ const readLog = async (name) => {
     return '';
   }
 };
+;// CONCATENATED MODULE: ./src/pidIsRunning.js
+function pidIsRunning(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 ;// CONCATENATED MODULE: ./src/start.js
+
 
 
 
@@ -6151,7 +6161,7 @@ async function main() {
 
   try {
     (0,core.debug)(`Waiting for port ${port} to be used...`);
-    await (0,tcp_port_used/* waitUntilUsedOnHost */.S7)(port, host, 250, 5000);
+    await (0,tcp_port_used/* waitUntilUsedOnHost */.S7)(port, host, 250, 10000);
     (0,core.info)('Spawned Turbo Cache Server:');
     (0,core.info)(`  PID: ${pid}`);
     (0,core.info)(`  Listening on port: ${port}`);
@@ -6164,9 +6174,13 @@ async function main() {
 
     process.exit(0);
   } catch (e) {
+    if (pidIsRunning(pid)) {
+      (0,core.debug)(`Timed out while waiting for Turbo Cache Server, yet process is running. Stopping PID: ${pid}...`);
+      process.kill(pid);
+    }
     const errors = await readLog('err');
     const errorMessage = errors ? `\nServer error log:\n${indentMultiline(errors)}` : '';
-    throw new Error(`Turbo server failed to start on port: ${port}${errorMessage}`);
+    throw new Error(`Turbo Cache Server failed to start on port: ${port}${errorMessage}`);
   }
 }
 
