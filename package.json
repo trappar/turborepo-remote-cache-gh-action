@@ -10,6 +10,7 @@
     "clean": "rimraf dist",
     "build": "npm-run-all clean --parallel build:*",
     "build:start": "ncc build src/start.js -o dist/start",
+    "build:start_and_log": "ncc build src/start_and_log.js -o dist/start_and_log",
     "build:server": "ncc build src/server.cjs -o dist/server",
     "build:post": "ncc build src/post.js -o dist/post",
     "turbo:test": "echo 'Hello, world!'"

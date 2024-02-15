@@ -2783,14 +2783,6 @@ var __webpack_exports__ = {};
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(93);
-;// CONCATENATED MODULE: ./src/indentMultiline.js
-const indentMultiline = (message, spaces = 2) => {
-  const output = [];
-  message.split('\n').forEach((line) => {
-    output.push(' '.repeat(spaces) + line);
-  });
-  return output.join('\n');
-};
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: external "node:fs/promises"
@@ -2824,7 +2816,6 @@ const readLog = async (name) => {
 
 
 
-
 function pidIsRunning(pid) {
   try {
     process.kill(pid, 0);
@@ -2832,6 +2823,14 @@ function pidIsRunning(pid) {
   } catch (e) {
     return false;
   }
+}
+
+function indentMultiline(message, spaces = 2) {
+  const output = [];
+  message.split('\n').forEach((line) => {
+    output.push(' '.repeat(spaces) + line);
+  });
+  return output.join('\n');
 }
 
 async function post() {

@@ -6042,14 +6042,8 @@ const external_node_child_process_namespaceObject = __WEBPACK_EXTERNAL_createReq
 const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
 // EXTERNAL MODULE: ./node_modules/.pnpm/tcp-port-used@1.0.2/node_modules/tcp-port-used/index.js
 var tcp_port_used = __nccwpck_require__(8351);
-;// CONCATENATED MODULE: ./src/indentMultiline.js
-const indentMultiline = (message, spaces = 2) => {
-  const output = [];
-  message.split('\n').forEach((line) => {
-    output.push(' '.repeat(spaces) + line);
-  });
-  return output.join('\n');
-};
+;// CONCATENATED MODULE: external "url"
+const external_url_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("url");
 // EXTERNAL MODULE: external "crypto"
 var external_crypto_ = __nccwpck_require__(6113);
 ;// CONCATENATED MODULE: ./src/inputs.js
@@ -6069,33 +6063,6 @@ const token = (0,external_crypto_.randomBytes)(24).toString('hex');
 const host = (0,core.getInput)('host', { trimWhitespace: true });
 const port = parseInt((0,core.getInput)('port', { trimWhitespace: true }));
 
-;// CONCATENATED MODULE: external "node:fs"
-const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
-;// CONCATENATED MODULE: external "node:fs/promises"
-const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
-// EXTERNAL MODULE: external "os"
-var external_os_ = __nccwpck_require__(2037);
-;// CONCATENATED MODULE: ./src/logs.js
-
-
-
-
-
-const logDir = external_node_path_namespaceObject.resolve(external_os_.tmpdir(), 'turborepo-remote-cache-gh-action');
-
-if (!external_node_fs_namespaceObject.existsSync(logDir)) {
-  external_node_fs_namespaceObject.mkdirSync(logDir, { recursive: true });
-}
-
-const logFile = (name) => external_node_path_namespaceObject.resolve(logDir, name);
-
-const readLog = async (name) => {
-  try {
-    return await promises_namespaceObject.readFile(logFile(name), 'utf8');
-  } catch (e) {
-    return '';
-  }
-};
 ;// CONCATENATED MODULE: ./src/start.js
 
 
@@ -6105,6 +6072,7 @@ const readLog = async (name) => {
 
 
 
+const start_dirname = (0,external_node_path_namespaceObject.dirname)((0,external_url_namespaceObject.fileURLToPath)(import.meta.url));
 
 async function getPort() {
   if (port) {
@@ -6125,7 +6093,7 @@ async function main() {
   (0,core.debug)('Starting Turbo Cache Server...');
   const subprocess = (0,external_node_child_process_namespaceObject.spawn)(
     'node',
-    [(0,external_node_path_namespaceObject.resolve)(process.cwd(), 'dist/server/index.cjs')],
+    [(0,external_node_path_namespaceObject.resolve)(start_dirname, '..', 'start_and_log')],
     {
       detached: true,
       stdio: 'ignore',
@@ -6156,9 +6124,7 @@ async function main() {
     (0,core.exportVariable)('TURBO_TOKEN', token);
     (0,core.exportVariable)('TURBO_TEAM', teamId);
   } catch (e) {
-    const errors = await readLog('err');
-    const errorMessage = errors ? `\nErrors: ${indentMultiline(errors)}` : '';
-    throw new Error(`Turbo server failed to start on port: ${port}${errorMessage}`);
+    throw new Error(`Turbo server failed to start on port: ${port}`);
   }
 }
 

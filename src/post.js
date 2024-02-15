@@ -1,5 +1,4 @@
 import { debug, getState, info, setFailed } from '@actions/core';
-import { indentMultiline } from './indentMultiline.js';
 import { readLog } from './logs.js';
 
 function pidIsRunning(pid) {
@@ -9,6 +8,14 @@ function pidIsRunning(pid) {
   } catch (e) {
     return false;
   }
+}
+
+function indentMultiline(message, spaces = 2) {
+  const output = [];
+  message.split('\n').forEach((line) => {
+    output.push(' '.repeat(spaces) + line);
+  });
+  return output.join('\n');
 }
 
 async function post() {

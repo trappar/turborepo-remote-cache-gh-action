@@ -1,27 +1,10 @@
-const fs = require('node:fs');
-const { logFile } = require('./logs.js');
+const { createApp } = require('turborepo-remote-cache');
 
-const handleError = (err) => {
-  fs.writeFileSync(logFile('err'), err.message);
-  process.exit(1);
-};
+const app = createApp({trustProxy: true});
 
-try {  
-  const { createApp } = require('turborepo-remote-cache');
-
-  const app = createApp({
-    trustProxy: true,
-    logger: {
-      level: 'debug',
-      stream: fs.createWriteStream(logFile('out')),
-    },
-  });
-
-  app.listen({ host: process.env.HOST, port: process.env.PORT }, (err) => {
-    if (err) {
-      handleError(err);
-    }
-  });
-} catch (err) {
-  handleError(err);
-}
+app.listen({ host: process.env.HOST, port: process.env.PORT }, (err) => {
+  if (err) {
+    console.error(err);
+    process.exit(1);
+  }
+});

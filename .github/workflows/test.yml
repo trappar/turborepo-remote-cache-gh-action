@@ -4,7 +4,19 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  test-starts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run TurboRepo Remote Cache Server
+        uses: ./
+        with:
+          storage-provider: local
+          storage-path: turbo-cache
+
+  test-realistic:
     runs-on: ubuntu-latest
     env:
       TURBO_TELEMETRY_DISABLED: 1

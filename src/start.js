@@ -7,11 +7,12 @@ import {
 } from '@actions/core';
 import getFreePort from 'get-port';
 import { spawn } from 'node:child_process';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { waitUntilUsedOnHost } from 'tcp-port-used';
-import { indentMultiline } from './indentMultiline.js';
+import { fileURLToPath } from 'url';
 import { host, port, storagePath, storageProvider, teamId, token } from './inputs.js';
-import { readLog } from './logs.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 async function getPort() {
   if (port) {
@@ -32,7 +33,7 @@ async function main() {
   debug('Starting Turbo Cache Server...');
   const subprocess = spawn(
     'node',
-    [resolve(process.cwd(), 'dist/server/index.cjs')],
+    [resolve(__dirname, '..', 'start_and_log')],
     {
       detached: true,
       stdio: 'ignore',
@@ -63,9 +64,7 @@ async function main() {
     exportVariable('TURBO_TOKEN', token);
     exportVariable('TURBO_TEAM', teamId);
   } catch (e) {
-    const errors = await readLog('err');
-    const errorMessage = errors ? `\nErrors: ${indentMultiline(errors)}` : '';
-    throw new Error(`Turbo server failed to start on port: ${port}${errorMessage}`);
+    throw new Error(`Turbo server failed to start on port: ${port}`);
   }
 }
 
