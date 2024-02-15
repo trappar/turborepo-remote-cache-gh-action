@@ -36,7 +36,7 @@ async function main() {
     [resolve(__dirname, '..', 'start_and_log')],
     {
       detached: true,
-      stdio: 'ignore',
+      stdio: 'pipe',
       env: {
         ...process.env,
         HOST: host,
@@ -48,8 +48,9 @@ async function main() {
     },
   );
 
+  subprocess.stdout?.on('data', (data) => debug(data.toString()));
+  subprocess.stderr?.on('data', (data) => debug(data.toString()));
   const pid = subprocess.pid?.toString();
-  subprocess.unref();
 
   try {
     debug(`Waiting for port ${port} to be used...`);
@@ -63,8 +64,10 @@ async function main() {
     exportVariable('TURBO_API', `http://${host}:${port}`);
     exportVariable('TURBO_TOKEN', token);
     exportVariable('TURBO_TEAM', teamId);
+
+    process.exit(0);
   } catch (e) {
-    throw new Error(`Turbo server failed to start on port: ${port}`);
+    throw new Error(`Turbo server failed to start on port: ${port}\n${e}`);
   }
 }
 

@@ -48,7 +48,7 @@ const readLog = async (name) => {
 
 const start_and_log_dirname = (0,external_node_path_namespaceObject.dirname)((0,external_url_namespaceObject.fileURLToPath)(import.meta.url));
 
-const subprocess = (0,external_node_child_process_namespaceObject.spawn)('node', [(0,external_node_path_namespaceObject.resolve)(start_and_log_dirname, '..', 'server', 'index.cjs')]);
-
+console.log('Starting Cache Server Process...');
+const subprocess = (0,external_node_child_process_namespaceObject.spawn)('node', [(0,external_node_path_namespaceObject.resolve)(start_and_log_dirname, '..', 'server', 'index.cjs')], {stdio: 'pipe'});
 subprocess.stdout.pipe((0,external_node_fs_namespaceObject.createWriteStream)(logFile('out')));
 subprocess.stderr.pipe((0,external_node_fs_namespaceObject.createWriteStream)(logFile('err')));

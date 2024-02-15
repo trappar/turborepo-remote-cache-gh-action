@@ -6,7 +6,7 @@ import { logFile } from './logs.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const subprocess = spawn('node', [resolve(__dirname, '..', 'server', 'index.cjs')]);
-
+console.log('Starting Cache Server Process...');
+const subprocess = spawn('node', [resolve(__dirname, '..', 'server', 'index.cjs')], {stdio: 'pipe'});
 subprocess.stdout.pipe(createWriteStream(logFile('out')));
 subprocess.stderr.pipe(createWriteStream(logFile('err')));
