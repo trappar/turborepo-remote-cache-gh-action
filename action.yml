@@ -18,7 +18,7 @@ inputs:
   host:
     description: "Used to set the TURBO_API env variable."
     required: false
-    default: "127.0.0.1"
+    default: "0.0.0.0"
   port:
     description: "Sets the port the server will listen on, and is added to the end of the TURBO_API env variable."
     required: false
