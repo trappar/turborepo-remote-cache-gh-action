@@ -3,24 +3,24 @@ description: "Setup Node, PNPM, and install dependencies"
 runs:
   using: "composite"
   steps:
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
       with:
-        version: 7
+        version: 8
         run_install: false
 
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
-        node-version: 16
+        node-version: 20
 
     - id: pnpm-cache
       shell: bash
       run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-    - uses: actions/cache@v3
+  
+    - uses: actions/cache@v4
       with:
         path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
         key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: ${{ runner.os }}-pnpm-store-
 
-    - run: pnpm install --prefer-offline
+    - run: pnpm install --prefer-offline --frozen-lockfile
       shell: bash

@@ -1,81 +1,54 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The require scope
-/******/ 	var __nccwpck_require__ = {};
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/compat */
-/******/ 	
-/******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
-/******/ 	
+import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
+/******/ /* webpack/runtime/compat */
+/******/ 
+/******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
-// ESM COMPAT FLAG
-__nccwpck_require__.r(__webpack_exports__);
 
-;// CONCATENATED MODULE: external "child_process"
-const external_child_process_namespaceObject = require("child_process");
-;// CONCATENATED MODULE: external "fs"
-const external_fs_namespaceObject = require("fs");
-;// CONCATENATED MODULE: external "path"
-const external_path_namespaceObject = require("path");
+;// CONCATENATED MODULE: external "node:child_process"
+const external_node_child_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:child_process");
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
+;// CONCATENATED MODULE: external "node:path"
+const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
+;// CONCATENATED MODULE: external "url"
+const external_url_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("url");
+;// CONCATENATED MODULE: external "node:fs/promises"
+const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
 ;// CONCATENATED MODULE: external "os"
-const external_os_namespaceObject = require("os");
-var external_os_default = /*#__PURE__*/__nccwpck_require__.n(external_os_namespaceObject);
-;// CONCATENATED MODULE: ./src/constants.ts
-
-
-const logDir = (0,external_path_namespaceObject.resolve)(external_os_default().tmpdir(), "turborepo-remote-cache-gh-action");
-
-;// CONCATENATED MODULE: ./src/start_and_log.ts
+const external_os_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("os");
+;// CONCATENATED MODULE: ./src/logs.js
 
 
 
 
-const subprocess = (0,external_child_process_namespaceObject.spawn)("node", [(0,external_path_namespaceObject.resolve)(__dirname, "../server")]);
-subprocess.stdout.pipe((0,external_fs_namespaceObject.createWriteStream)((0,external_path_namespaceObject.resolve)(logDir, "out.log")));
-subprocess.stderr.pipe((0,external_fs_namespaceObject.createWriteStream)((0,external_path_namespaceObject.resolve)(logDir, "err.log")));
 
-module.exports = __webpack_exports__;
-/******/ })()
-;
+const logDir = external_node_path_namespaceObject.resolve(external_os_namespaceObject.tmpdir(), 'turborepo-remote-cache-gh-action');
+
+if (!external_node_fs_namespaceObject.existsSync(logDir)) {
+  external_node_fs_namespaceObject.mkdirSync(logDir, { recursive: true });
+}
+
+const logFile = (name) => external_node_path_namespaceObject.resolve(logDir, name);
+
+const readLog = async (name) => {
+  try {
+    return await fsPromises.readFile(logFile(name), 'utf8');
+  } catch (e) {
+    return '';
+  }
+};
+;// CONCATENATED MODULE: ./src/start_and_log.js
+
+
+
+
+
+
+const start_and_log_dirname = (0,external_node_path_namespaceObject.dirname)((0,external_url_namespaceObject.fileURLToPath)(import.meta.url));
+
+console.log('Starting Cache Server Process...');
+const subprocess = (0,external_node_child_process_namespaceObject.spawn)('node', [(0,external_node_path_namespaceObject.resolve)(start_and_log_dirname, '..', 'server', 'index.cjs')], {stdio: 'pipe'});
+subprocess.stdout.pipe((0,external_node_fs_namespaceObject.createWriteStream)(logFile('out')));
+subprocess.stderr.pipe((0,external_node_fs_namespaceObject.createWriteStream)(logFile('err')));

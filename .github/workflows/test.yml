@@ -4,11 +4,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  lint-build-verify:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -22,14 +22,78 @@ jobs:
       - name: Check working copy
         run: git diff --exit-code
 
+  test-starts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Run TurboRepo Remote Cache Server
         uses: ./
         with:
           storage-provider: local
-          storage-path: test
+          storage-path: turbo-cache
+
+  test-realistic:
+    runs-on: ubuntu-latest
+    env:
+      TURBO_TELEMETRY_DISABLED: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run TurboRepo Remote Cache Server
+        uses: ./
+        with:
+          storage-provider: local
+          storage-path: turbo-cache
       
       - name: Ensure environmental variables have been set correctly
         run: |
-          echo $TURBO_API | grep -P "^http://127.0.0.1:\d+$"
+          echo $TURBO_API | grep -P "^http://0.0.0.0:\d+$"
           echo $TURBO_TOKEN | grep -P "^[a-zA-Z0-9]{48}$"
           echo $TURBO_TEAM | grep -P "^ci$"
+      
+      - name: Run turbo:test with turbo and expect no cache
+        run: |
+          # Expect no cache entries
+          [ ! -d "/tmp/turbo-cache/ci" ] || exit 1
+
+          pnpm turbo turbo:test > /tmp/turbo-output
+
+          # Expect a single cache entry
+          [ $(find /tmp/turbo-cache/ci -type f | wc -l) -eq 1 ] || exit 1
+      
+      - name: Rerun turbo:test with turbo and expect cache to be used
+        run: |
+          pnpm turbo turbo:test > /tmp/turbo-output
+          grep "Remote caching enabled" /tmp/turbo-output > /dev/null
+          grep "1 cached, 1 total" /tmp/turbo-output > /dev/null
+          grep "FULL TURBO" /tmp/turbo-output > /dev/null
+
+          # Expect there to still just be one cache entry stored
+          [ $(find /tmp/turbo-cache/ci -type f | wc -l) -eq 1 ] || exit 1
+
+  test-invalid-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run TurboRepo Remote Cache Server with invalid storage provider
+        uses: ./
+        id: run-turbo
+        continue-on-error: true
+        with:
+          storage-provider: asdf
+          storage-path: asdf
+      
+      - name: Error if prior step succeeded
+        if: steps.run-turbo.outcome == 'success'
+        run: exit 1
